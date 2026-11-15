@@ -1,0 +1,535 @@
+Phone_book_Anikeenko
+
+□ Authentication Controler / Registration / 1 - Positive tests registration
+└ Unregistered user can register with valid data - expected code 200
+  POST https://contactapp-telran-backend.herokuapp.com/v1/user/registration/usernamepassword [200 OK, 1.23kB, 721ms]
+  √  Status code is 200
+  √  Status code is 'OK'
+  √  Response time is less than 1500ms
+  ┌
+  │ '{\r\n  "username": "Linnea_Schoen43@yahoo.com",\r\n  "password": "Mmar123456$"\r\n}'
+  │ { username: 'Linnea_Schoen43@yahoo.com', password: 'Mmar123456$' }
+  │ 'Linnea_Schoen43@yahoo.com'
+  └
+
+□ Authentication Controler / Registration / 2 - Negative tests registration
+└ Unregistered user can`t register with invalid email and valid pwd - expected 400
+  POST https://contactapp-telran-backend.herokuapp.com/v1/user/registration/usernamepassword [400 Bad Request, 1.19kB, 151ms]
+  √  Root collection: Unsuccessful POST request
+  √  Root collection: Unsuccessful POST request
+  √  Status code is 400
+  √  Status code is 'Bad Request'
+  √  Check that error contains Bad request
+
+└ Unregistered user can`t register with valid email and invalid pwd - expected 400
+  POST https://contactapp-telran-backend.herokuapp.com/v1/user/registration/usernamepassword [400 Bad Request, 1.3kB, 148ms]
+  √  Root collection: Unsuccessful POST request
+  √  Root collection: Unsuccessful POST request
+  √  Status code is 400
+  √  Status code is 'Bad Request'
+  √  Error message with wrong format pwd
+
+└ Registered user can`t register with registered data (email and pwd) - expected 409
+  POST https://contactapp-telran-backend.herokuapp.com/v1/user/registration/usernamepassword [409 Conflict, 1.16kB, 177ms]
+  √  Root collection: Unsuccessful POST request
+  √  Root collection: Unsuccessful POST request
+  √  Status code is 409
+  √  Status code is 'Conflict'
+  √  Message contains User exists
+
+└ Registered user can`t register with registered email and new valid pwd - expected 409
+  POST https://contactapp-telran-backend.herokuapp.com/v1/user/registration/usernamepassword [409 Conflict, 1.15kB, 179ms]
+  √  Root collection: Unsuccessful POST request
+  √  Root collection: Unsuccessful POST request
+  √  Status code is 409
+  √  Status code is 'Conflict'
+
+□ Authentication Controler / Login / 1 - Positive tests login
+└ Registered user can login with valid data - expected 200
+  POST https://contactapp-telran-backend.herokuapp.com/v1/user/login/usernamepassword [200 OK, 1.45kB, 249ms]
+  √  Status code is 200
+  √  Status code is 'OK'
+  √  Response time is less than 1200s
+  ┌
+  │ '{"token":"eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJST0xFX1VTRVIiXSwic3ViIjoibWFyZ29AZ21haWwuY29tIiwiaXNzIjoiUmVndWxhaXQiLCJleHAiOjE3OTUzNzQ2MTMsImlhdCI6MTc5NDc3NDYxM30.htcEOtZcWMpfXr_ShEpMtMRgpQtq1QH9L-v9tUbJBGA"}'
+  └
+
+□ Authentication Controler / Login / 2 - Negative tests login
+└ Unregistered user can’t login with valid data - expected 401
+  POST https://contactapp-telran-backend.herokuapp.com/v1/user/login/usernamepassword [401 Unauthorized, 1.18kB, 351ms]
+  √  Root collection: From Folder Status code is 401
+  √  Status code is 401
+  √  Status code is 'Unauthorized'
+
+└ Registered user can’t login with valid email and invalid pwd - without $ - expected 401
+  POST https://contactapp-telran-backend.herokuapp.com/v1/user/login/usernamepassword [401 Unauthorized, 1.18kB, 350ms]
+  √  Root collection: From Folder Status code is 401
+  √  Status code is 401
+  √  Status code is 'Unauthorized'
+
+└ Registered user can’t login with invalid email and valid pwd - without@ - expected 401
+  POST https://contactapp-telran-backend.herokuapp.com/v1/user/login/usernamepassword [401 Unauthorized, 1.18kB, 359ms]
+  √  Root collection: From Folder Status code is 401
+  √  Status code is 401
+  √  Status code is 'Unauthorized'
+
+□ Contact Controller / Add new contact / 1 - Positive test New Contact
+└ Reg.user can create new contact-valid data in all fields-expected 200
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [200 OK, 1.08kB, 181ms]
+  √  Root collection: Status code is 200
+  √  Root collection: Status message is OK
+  √  Root collection: Contact was aded successfully
+  √  Status code is 200
+  √  Status message is OK
+  ┌
+  │ '75497884-7874-4f6c-b5ad-71af0e8ad157'
+  └
+  √  Contact was aded successfully
+
+└ Reg.user can create new contact-valid data in required fields-expected 200
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [200 OK, 1.08kB, 177ms]
+  √  Root collection: Status code is 200
+  √  Root collection: Status message is OK
+  √  Root collection: Contact was aded successfully
+  √  Status code is 200
+  ┌
+  │ '07159003-8cdb-4702-a018-90ea5687c22e'
+  └
+  √  Contact was aded successfully
+
+└ Reg.user-add new contact with only digits in Name - expected code 200
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [200 OK, 1.08kB, 179ms]
+  √  Root collection: Status code is 200
+  √  Root collection: Status message is OK
+  √  Root collection: Contact was aded successfully
+  √  Status code is 200
+  √  Status message is OK
+  √  Contact was aded successfully
+
+└ Reg.user-add new contact with only Russian letters in Address - expected code 200
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [200 OK, 1.07kB, 179ms]
+  √  Root collection: Status code is 200
+  √  Root collection: Status message is OK
+  √  Root collection: Contact was aded successfully
+  √  Status code is 200
+  √  Status message is OK
+  √  Contact was aded successfully
+
+└ Reg.user-add new contact with digits and special symbols in Address - expected code 200
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [200 OK, 1.07kB, 176ms]
+  √  Root collection: Status code is 200
+  √  Root collection: Status message is OK
+  √  Root collection: Contact was aded successfully
+  √  Status code is 200
+  √  Status message is OK
+  √  Contact was aded successfully
+
+└ Reg.user-add new contact with only special symbols in Name - expected code 200
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [200 OK, 1.07kB, 180ms]
+  √  Root collection: Status code is 200
+  √  Root collection: Status message is OK
+  √  Root collection: Contact was aded successfully
+  √  Status code is 200
+  √  Status message is OK
+  √  Contact was aded successfully
+
+└ Reg.user-add new contact with Hebrew symbols in Name - expected code 200
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [200 OK, 1.08kB, 179ms]
+  √  Root collection: Status code is 200
+  √  Root collection: Status message is OK
+  √  Root collection: Contact was aded successfully
+  √  Status code is 200
+  √  Status message is OK
+  √  Contact was aded successfully
+
+└ Reg.user-add new contact with Russian symbols in Name - expected code 200
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [200 OK, 1.08kB, 180ms]
+  √  Root collection: Status code is 200
+  √  Root collection: Status message is OK
+  √  Root collection: Contact was aded successfully
+  √  Status code is 200
+  √  Status message is OK
+  √  Contact was aded successfully
+
+└ Reg.user-add new contact with only digits in Last Name - expected code 200
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [200 OK, 1.08kB, 179ms]
+  √  Root collection: Status code is 200
+  √  Root collection: Status message is OK
+  √  Root collection: Contact was aded successfully
+  √  Status code is 200
+  √  Status code is Ok
+  √  Contact was aded successfully
+
+└ Reg.user-add new contact with special symbols in Last Name - expected code 200
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [200 OK, 1.07kB, 186ms]
+  √  Root collection: Status code is 200
+  √  Root collection: Status message is OK
+  √  Root collection: Contact was aded successfully
+  √  Status code is 200
+  √  Status code is Ok
+  √  Contact was aded successfully
+
+└ Reg.user-add new contact with Hebrew and Russian symbols in Last Name - expected code 200
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [200 OK, 1.07kB, 177ms]
+  √  Root collection: Status code is 200
+  √  Root collection: Status message is OK
+  √  Root collection: Contact was aded successfully
+  √  Status code is 200
+  √  Status code is Ok
+  √  Contact was aded successfully
+
+└ Reg.user-add new contact with random symbols in Last Name - expected code 200
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [200 OK, 1.07kB, 177ms]
+  √  Root collection: Status code is 200
+  √  Root collection: Status message is OK
+  √  Root collection: Contact was aded successfully
+  √  Status code is 200
+  √  Status code is Ok
+  √  Contact was aded successfully
+
+□ Contact Controller / Add new contact / 2 - Negative test New Contact
+└ [BUG] Reg.user-add new contact with existing Email - expected code 409
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [200 OK, 1.07kB, 176ms]
+  1. Status code is 409
+  ┌
+  │ '{\r\n  "name": "Anna",\r\n  "lastName": "Ivanov",\r\n  "email": "anna12345@gmail.com",\r\n  "phone": "778069960601",\r\n  "address": "Canada",\r\n  "description": "Best Friend"\r\n}'
+  └
+
+└ [BUG] Reg.user-add new contact with existing Phone number - expected code 409
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [200 OK, 1.07kB, 177ms]
+  2. Status code is 409
+
+└ Reg.user-add new contact with empty Name - expected code 400
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [400 Bad Request, 1.14kB, 146ms]
+  √  Status code is 400
+  √  Status code is: 'Bad Request'
+  √  Name error: 'must not be blank'
+
+└ Reg.user-add new contact with empty Address - expected code 400
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [400 Bad Request, 1.14kB, 148ms]
+  √  Status code is 400
+  √  Status code is: 'Bad Request'
+  √  Name error: 'must not be blank'
+
+└ Reg.user-add new contact with 3 backspaces in Address - expected code 400
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [400 Bad Request, 1.14kB, 149ms]
+  √  Status code is 400
+  √  Status code is: 'Bad Request'
+  √  Name error: 'must not be blank'
+
+└ Reg.user-add new contact with empty Phone Number - expected code 400
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [400 Bad Request, 1.19kB, 148ms]
+  √  Status code is 400
+  √  Status code is: 'Bad Request'
+  √  Name error: 'Phone number must contain only digits! And length 10-15.'
+
+└ [BUG] Reg.user-add new contact with empty Email - expected code 400
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [200 OK, 1.07kB, 178ms]
+  3. Status code is 400
+  4. Status code is: 'Bad Request'
+  5. Name error: 'must not be blank.'
+
+└ Reg.user-add new contact with 3 backspaces Email - expected code 400
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [400 Bad Request, 1.16kB, 148ms]
+  √  Status code is 400
+  √  Status code is: 'Bad Request'
+  √  Name error: 'must be a well-formed email address'
+
+└ Reg.user-add new contact with double @ in Email - expected code 400
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [400 Bad Request, 1.16kB, 146ms]
+  √  Status code is 400
+  √  Status code is: 'Bad Request'
+  √  Name error: 'must be a well-formed email address'
+
+└ [BUG] Reg.user-add new contact with Russian letters in Email - expected code 400
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [200 OK, 1.08kB, 185ms]
+  6. Status code is 400
+  7. Status code is: 'Bad Request'
+  8. Name error: 'must be a well-formed email address'
+
+└ [BUG] Reg.user-add new contact with Hebrew letters in Email - expected code 400
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [200 OK, 1.08kB, 176ms]
+  9. Status code is 400
+ 10. Status code is: 'Bad Request'
+ 11. Name error: 'must be a well-formed email address'
+
+└ Reg.user-add new contact without characters before @ in Email - expected code 400
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [400 Bad Request, 1.16kB, 148ms]
+  √  Status code is 400
+  √  Status code is: 'Bad Request'
+  √  Name error: 'must be a well-formed email address'
+
+└ Reg.user-add new contact without characters after @ in Email - expected code 400
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [400 Bad Request, 1.16kB, 149ms]
+  √  Status code is 400
+  √  Status code is: 'Bad Request'
+  √  Name error: 'must be a well-formed email address'
+
+└ Reg.user-add new contact with backspace before @ in Email - expected code 400
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [400 Bad Request, 1.16kB, 149ms]
+  √  Status code is 400
+  √  Status code is: 'Bad Request'
+  √  Name error: 'must be a well-formed email address'
+
+└ Reg.user-add new contact with symbols in Phone Number - expected code 400
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [400 Bad Request, 1.19kB, 148ms]
+  √  Status code is 400
+  √  Status code is: 'Bad Request'
+  √  Name error: 'Phone number must contain only digits! And length 10-15.'
+
+└ Reg.user-add new contact with 9 digits Phone Number - expected code 400
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [400 Bad Request, 1.19kB, 150ms]
+  √  Status code is 400
+  √  Status code is: 'Bad Request'
+  √  Name error: 'Phone number must contain only digits! And length 10-15.'
+
+└ Reg.user-add new contact with 19 digits Phone Number - expected code 400
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [400 Bad Request, 1.19kB, 146ms]
+  √  Status code is 400
+  √  Status code is: 'Bad Request'
+  √  Name error: 'Phone number must contain only digits! And length 10-15.'
+
+└ Reg.user-add new contact with special symbols in Phone Number - expected code 400
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [400 Bad Request, 1.19kB, 151ms]
+  √  Status code is 400
+  √  Status code is: 'Bad Request'
+  √  Name error: 'Phone number must contain only digits! And length 10-15.'
+
+└ Reg.user-add new contact with character in Phone Number - expected code 400
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [400 Bad Request, 1.19kB, 148ms]
+  √  Status code is 400
+  √  Status code is: 'Bad Request'
+  √  Name error: 'Phone number must contain only digits! And length 10-15.'
+
+└ Reg.user-add new contact with 3 backspaces in Name - expected code 400
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [400 Bad Request, 1.14kB, 150ms]
+  √  Status code is 400
+  √  Status code is: 'Bad Request'
+  √  Name error: 'must not be blank'
+
+└ Reg.user-add new contact with empty Last Name - expected code 400
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [400 Bad Request, 1.14kB, 149ms]
+  √  Status code is 400
+  √  Status code is: 'Bad Request'
+  √  LastName error: 'must not be blank'
+
+└ Reg.user-add new contact with 3 backspaces in Last Name - expected code 400
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [400 Bad Request, 1.14kB, 148ms]
+  √  Status code is 400
+  √  Status code is: 'Bad Request'
+  √  LastName error: 'must not be blank'
+
+└ Unreg.user - add new contact unauthorized - expected code 401
+  POST https://contactapp-telran-backend.herokuapp.com/v1/contacts [401 Unauthorized, 1.25kB, 146ms]
+  √  Status code is 401
+  √  Status code name has status 'Unauthorized'
+
+□ Contact Controller / Update contact / 1 - Positive test Update contact
+└ Reg.user can edit an existing contact - all fields- expected code 200
+  PUT https://contactapp-telran-backend.herokuapp.com/v1/contacts [200 OK, 1.03kB, 206ms]
+  √  Status code is 200
+  √  Check message contains Contact was updated
+  √  You message is string
+
+└ Reg.user can edit an existing contact - required fields- expected code 200
+  PUT https://contactapp-telran-backend.herokuapp.com/v1/contacts [200 OK, 1.03kB, 210ms]
+  √  Status code is 200
+  √  Check message contains Contact was updated
+  √  You message is string
+
+□ Contact Controller / Update contact / 2 - Negative test Update contact
+└ Reg.user can't edit an existing contact - incorrect [Name] - expected code 400
+  PUT https://contactapp-telran-backend.herokuapp.com/v1/contacts [400 Bad Request, 1.14kB, 147ms]
+  √  Status code is 400
+  √  Status is Bad Request
+
+└ Reg.user can't edit an existing contact - incorrect [Last Name] - expected code 400
+  PUT https://contactapp-telran-backend.herokuapp.com/v1/contacts [400 Bad Request, 1.15kB, 156ms]
+  √  Status code is 400
+  √  Status is Bad Request
+
+└ Reg.user can't edit an existing contact - incorrect [Phone] - expected code 400
+  PUT https://contactapp-telran-backend.herokuapp.com/v1/contacts [400 Bad Request, 1.19kB, 147ms]
+  √  Status code is 400
+  √  Status is Bad Request
+
+└ [BUG]Reg.user can't edit an existing contact - empty [Email] - expected code 400
+  PUT https://contactapp-telran-backend.herokuapp.com/v1/contacts [200 OK, 1.04kB, 208ms]
+ 12. Status code is 400
+ 13. Status is Bad Request
+
+└ [BUG]Reg.user can't edit an existing contact - Hebrew symbols [Email] - expected code 400
+  PUT https://contactapp-telran-backend.herokuapp.com/v1/contacts [200 OK, 1.03kB, 208ms]
+ 14. Status code is 400
+ 15. Status is Bad Request
+
+└ [BUG]Reg.user can't edit an existing contact - Russian symbols [Email] - expected code 400
+  PUT https://contactapp-telran-backend.herokuapp.com/v1/contacts [200 OK, 1.03kB, 209ms]
+ 16. Status code is 400
+ 17. Status is Bad Request
+
+└ Reg.user can't edit an existing contact - incorrect [Address] - expected code 400
+  PUT https://contactapp-telran-backend.herokuapp.com/v1/contacts [400 Bad Request, 1.14kB, 147ms]
+  √  Status code is 400
+  √  Status is Bad Request
+
+└ [BUG]Reg.user can't update contact with existing Phone - expected code 400
+  PUT https://contactapp-telran-backend.herokuapp.com/v1/contacts [200 OK, 1.04kB, 208ms]
+ 18. Status code is 400
+
+└ [BUG]Reg.user can't update contact with existing Email - expected code 400
+  PUT https://contactapp-telran-backend.herokuapp.com/v1/contacts [200 OK, 1.04kB, 207ms]
+ 19. Status code is 400
+
+└ Unauthorized user can't update contact - not success - expected code 401
+  PUT https://contactapp-telran-backend.herokuapp.com/v1/contacts [401 Unauthorized, 1.21kB, 144ms]
+  √  Status code is 401
+  √  Status is Unauthorized
+
+└ [BUG] Reg.user can't update not existing contact - not success - expected code 404
+  PUT https://contactapp-telran-backend.herokuapp.com/v1/contacts [400 Bad Request, 1.18kB, 176ms]
+ 20. Status code is 404
+  √  Check message contains Contact not found in your contacts!
+  √  You message is string
+
+□ Contact Controller / Delete contact by ID
+└ Delete contact success - expected code 200
+  ┌
+  │ 'Error:', { type: 'Error', name: 'TypeError', message: 'pm.execution.runRequest is not a function' }
+  └
+  DELETE https://contactapp-telran-backend.herokuapp.com/v1/contacts/07159003-8cdb-4702-a018-90ea5687c22e [200 OK, 1.03kB, 179ms]
+  √  Status code is 200
+  √  Contact was deleted
+
+□ Contact Controller / Get all contacts
+└ Regist.user can get all contacts - expected code 200
+  GET https://contactapp-telran-backend.herokuapp.com/v1/contacts [200 OK, 38.32kB, 393ms]
+  √  Status code is 200
+  √  Status code is OK
+  √  Response time is less than 1200ms
+
+└ Unregist.user can't get all contacts - expected code 401
+  GET https://contactapp-telran-backend.herokuapp.com/v1/contacts [401 Unauthorized, 1.25kB, 146ms]
+  √  Status code is 401
+  √  Status code is 'Unauthorized'
+  √  Error message: 'JWT signature does not match.'
+  √  Your path is: '/v1/contacts'
+
+┌─────────────────────────┬────────────────────┬────────────────────┐
+│                         │           executed │             failed │
+├─────────────────────────┼────────────────────┼────────────────────┤
+│              iterations │                  1 │                  0 │
+├─────────────────────────┼────────────────────┼────────────────────┤
+│                requests │                 60 │                  0 │
+├─────────────────────────┼────────────────────┼────────────────────┤
+│            test-scripts │                 79 │                  0 │
+├─────────────────────────┼────────────────────┼────────────────────┤
+│      prerequest-scripts │                 21 │                  0 │
+├─────────────────────────┼────────────────────┼────────────────────┤
+│              assertions │                205 │                 20 │
+├─────────────────────────┴────────────────────┴────────────────────┤
+│ total run duration: 17.6s                                         │
+├───────────────────────────────────────────────────────────────────┤
+│ total data received: 44.44kB (approx)                             │
+├───────────────────────────────────────────────────────────────────┤
+│ average response time: 191ms [min: 144ms, max: 721ms, s.d.: 87ms] │
+└───────────────────────────────────────────────────────────────────┘
+
+   #  failure                                              detail
+
+ 01.  AssertionError                                       Status code is 409
+                                                           expected response to have status code 409 but got 200
+                                                           at assertion:0 in test-script
+                                                           inside "Contact Controller / Add new contact / 2 - Negative test New Contact / [BUG] Reg.user-add new contact with existing Email - expected code 409"
+
+ 02.  AssertionError                                       Status code is 409
+                                                           expected response to have status code 409 but got 200
+                                                           at assertion:0 in test-script
+                                                           inside "Contact Controller / Add new contact / 2 - Negative test New Contact / [BUG] Reg.user-add new contact with existing Phone number - expected code 409"
+
+ 03.  AssertionError                                       Status code is 400
+                                                           expected response to have status code 400 but got 200
+                                                           at assertion:0 in test-script
+                                                           inside "Contact Controller / Add new contact / 2 - Negative test New Contact / [BUG] Reg.user-add new contact with empty Email - expected code 400"
+
+ 04.  AssertionError                                       Status code is: 'Bad Request'
+                                                           expected undefined to deeply equal 'Bad Request'
+                                                           at assertion:1 in test-script
+                                                           inside "Contact Controller / Add new contact / 2 - Negative test New Contact / [BUG] Reg.user-add new contact with empty Email - expected code 400"
+
+ 05.  AssertionError                                       Name error: 'must not be blank.'
+                                                           the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+                                                           at assertion:2 in test-script
+                                                           inside "Contact Controller / Add new contact / 2 - Negative test New Contact / [BUG] Reg.user-add new contact with empty Email - expected code 400"
+
+ 06.  AssertionError                                       Status code is 400
+                                                           expected response to have status code 400 but got 200
+                                                           at assertion:0 in test-script
+ 07.  AssertionError                                       Status code is: 'Bad Request'
+                                                           at assertion:1 in test-script
+                                                           inside "Contact Controller / Add new contact / 2 - Negative test New Contact / [BUG] Reg.user-add new contact with Russian letters in Email - expected code 400"
+
+ 08.  AssertionError                                       Name error: 'must be a well-formed email address'
+                                                           the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+                                                           at assertion:2 in test-script
+                                                           inside "Contact Controller / Add new contact / 2 - Negative test New Contact / [BUG] Reg.user-add new contact with Russian letters in Email - expected code 400"
+
+ 09.  AssertionError                                       Status code is 400
+                                                           expected response to have status code 400 but got 200
+                                                           at assertion:0 in test-script
+                                                           inside "Contact Controller / Add new contact / 2 - Negative test New Contact / [BUG] Reg.user-add new contact with Hebrew letters in Email - expected code 400"
+
+ 10.  AssertionError                                       Status code is: 'Bad Request'
+                                                           expected undefined to deeply equal 'Bad Request'
+                                                           at assertion:1 in test-script
+                                                           inside "Contact Controller / Add new contact / 2 - Negative test New Contact / [BUG] Reg.user-add new contact with Hebrew letters in Email - expected code 400"
+
+ 11.  AssertionError                                       Name error: 'must be a well-formed email address'
+                                                           the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+                                                           at assertion:2 in test-script
+                                                           inside "Contact Controller / Add new contact / 2 - Negative test New Contact / [BUG] Reg.user-add new contact with Hebrew letters in Email - expected code 400"
+
+ 12.  AssertionError                                       Status code is 400
+                                                           expected response to have status code 400 but got 200
+                                                           at assertion:0 in test-script
+                                                           inside "Contact Controller / Update contact / 2 - Negative test Update contact / [BUG]Reg.user can't edit an existing contact - empty [Email] - expected code 400"
+
+ 13.  AssertionError                                       Status is Bad Request
+                                                           expected response to have status reason 'Bad Request' but got 'OK'
+                                                           at assertion:1 in test-script
+                                                           inside "Contact Controller / Update contact / 2 - Negative test Update contact / [BUG]Reg.user can't edit an existing contact - empty [Email] - expected code 400"
+
+ 14.  AssertionError                                       Status code is 400
+                                                           expected response to have status code 400 but got 200
+                                                           at assertion:0 in test-script
+                                                           inside "Contact Controller / Update contact / 2 - Negative test Update contact / [BUG]Reg.user can't edit an existing contact - Hebrew symbols [Email] - expected code 400"
+
+ 15.  AssertionError                                       Status is Bad Request
+                                                           expected response to have status reason 'Bad Request' but got 'OK'
+                                                           at assertion:1 in test-script
+                                                           inside "Contact Controller / Update contact / 2 - Negative test Update contact / [BUG]Reg.user can't edit an existing contact - Hebrew symbols [Email] - expected code 400"
+
+ 16.  AssertionError                                       Status code is 400
+                                                           expected response to have status code 400 but got 200
+                                                           at assertion:0 in test-script
+                                                           inside "Contact Controller / Update contact / 2 - Negative test Update contact / [BUG]Reg.user can't edit an existing contact - Russian symbols [Email] - expected code 400"
+
+ 17.  AssertionError                                       Status is Bad Request
+                                                           expected response to have status reason 'Bad Request' but got 'OK'
+                                                           at assertion:1 in test-script
+                                                           inside "Contact Controller / Update contact / 2 - Negative test Update contact / [BUG]Reg.user can't edit an existing contact - Russian symbols [Email] - expected code 400"
+
+ 18.  AssertionError                                       Status code is 400
+                                                           expected response to have status code 400 but got 200
+                                                           at assertion:0 in test-script
+                                                           inside "Contact Controller / Update contact / 2 - Negative test Update contact / [BUG]Reg.user can't update contact with existing Phone - expected code 400"
+
+ 19.  AssertionError                                       Status code is 400
+                                                           expected response to have status code 400 but got 200
+                                                           at assertion:0 in test-script
+                                                           inside "Contact Controller / Update contact / 2 - Negative test Update contact / [BUG]Reg.user can't update contact with existing Email - expected code 400"
+
+ 20.  AssertionError                                       Status code is 404
+                                                           expected response to have status code 404 but got 400
+                                                           at assertion:0 in test-script
+                                                           inside "Contact Controller / Update contact / 2 - Negative test Update contact / [BUG] Reg.user can't update not existing contact - not success - expected code 404"

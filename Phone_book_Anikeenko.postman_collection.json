@@ -1,0 +1,3503 @@
+{
+  "info": {
+    "_postman_id": "5993aa09-21bf-43c3-b16b-f030a1c38134",
+    "name": "Phone_book_Anikeenko",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "54635540",
+    "_collection_link": "https://go.postman.co/collection/54635540-5993aa09-21bf-43c3-b16b-f030a1c38134?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Authentication Controler",
+      "item": [
+        {
+          "name": "Registration",
+          "item": [
+            {
+              "name": "1 - Positive tests registration",
+              "item": [
+                {
+                  "name": "Unregistered user can register with valid data - expected code 200",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Status code is 'OK'\", function () {\r\n    pm.response.to.have.status(\"OK\");\r\n}); \r\n\r\npm.test(\"Response time is less than 1500ms\", function () {\r\n    pm.expect(pm.response.responseTime).to.be.below(1500);\r\n});\r\n\r\nconsole.log(pm.request.body.raw)\r\nconsole.log(JSON.parse(pm.request.body.raw))\r\nconsole.log(JSON.parse(pm.request.body.raw).username)\r\n\r\n//some token to environment\r\nconst response = pm.response.json();\r\npm.environment.set(\"token\",response.token)\r\n\r\n"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"username\": \"{{$randomEmail}}\",\r\n  \"password\": \"Mmar123456$\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/user/registration/usernamepassword",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "user",
+                        "registration",
+                        "usernamepassword"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "2 - Negative tests registration",
+              "item": [
+                {
+                  "name": "Unregistered user can`t register with invalid email and valid pwd - expected 400",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r\n    pm.response.to.have.status(400);\r\n});\r\n\r\npm.test(\"Status code is 'Bad Request'\", function () {\r\n    pm.response.to.have.status('Bad Request');\r\n});\r\n\r\npm.test(\"Check that error contains Bad request\", function () {\r\n    var jsonData = pm.response.json();\r\n    pm.expect(jsonData.error).to.eql(\"Bad Request\");\r\n});\r\n\r\n"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"username\": \"margogmail.com\",\r\n  \"password\": \"Mmar123456$\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/user/registration/usernamepassword",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "user",
+                        "registration",
+                        "usernamepassword"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Unregistered user can`t register with valid email and invalid pwd - expected 400",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r\n    pm.response.to.have.status(400);\r\n});\r\n\r\npm.test(\"Status code is 'Bad Request'\", function () {\r\n    pm.response.to.have.status('Bad Request');\r\n});\r\npm.test(\"Error message with wrong format pwd\", function () {\r\n    var jsonData = pm.response.json();\r\n    pm.expect(jsonData.message.password).to.contains (\" At least 8 characters;\");\r\n});\r\n"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"username\": \"margo@gmail.com\",\r\n  \"password\": \"margo\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/user/registration/usernamepassword",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "user",
+                        "registration",
+                        "usernamepassword"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Registered user can`t register with registered data (email and pwd) - expected 409",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status code is 409\", function () {\r\n    pm.response.to.have.status(409);\r\n});\r\n\r\npm.test(\"Status code is 'Conflict'\", function () {\r\n    pm.response.to.have.status('Conflict');\r\n});\r\npm.test(\"Message contains User exists\", function () {\r\n    var jsonData = pm.response.json();\r\n    pm.expect(jsonData.message).to.eql(\"User already exists\");\r\n});"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"username\": \"anna12345@gmail.com\",\r\n  \"password\": \"123456!Anna\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/user/registration/usernamepassword",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "user",
+                        "registration",
+                        "usernamepassword"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Registered user can`t register with registered email and new valid pwd - expected 409",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status code is 409\", function () {\r\n    pm.response.to.have.status(409);\r\n});\r\n\r\npm.test(\"Status code is 'Conflict'\", function () {\r\n    pm.response.to.have.status('Conflict');\r\n});"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"username\": \"anna12345@gmail.com\",\r\n  \"password\": \"Mmar77889911$\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/user/registration/usernamepassword",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "user",
+                        "registration",
+                        "usernamepassword"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ],
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {},
+                    "exec": [
+                      ""
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {},
+                    "exec": [
+                      "pm.test(\"Root collection: Unsuccessful POST request\", function () {\r",
+                      "    pm.expect(pm.response.code).to.be.oneOf([400, 409]);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Root collection: Unsuccessful POST request\", function () {\r",
+                      "    pm.expect(pm.response.code).to.be.below(410);\r",
+                      "});\r",
+                      ""
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Login",
+          "item": [
+            {
+              "name": "1 - Positive tests login",
+              "item": [
+                {
+                  "name": "Registered user can login with valid data - expected 200",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 200\", function () {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "});\r",
+                          "//_________________________________________________\r",
+                          "pm.test(\"Status code is 'OK'\", function () {\r",
+                          "    pm.response.to.have.status(\"OK\");\r",
+                          "});\r",
+                          "//_________________________________________________\r",
+                          "pm.test(\"Response time is less than 1200s\", function () {\r",
+                          "    pm.expect(pm.response.responseTime).to.be.below(1200);\r",
+                          "});\r",
+                          "//_________________________________________________\r",
+                          "try{\r",
+                          "pm.environment.set(\"token\",JSON.parse(pm.response.text()).token)\r",
+                          "}catch(e){\r",
+                          "console.log(e)\r",
+                          "}\r",
+                          "console.log(pm.response.text());\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"username\": \"margo@gmail.com\",\r\n  \"password\": \"Mmar123456$\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/user/login/usernamepassword",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "user",
+                        "login",
+                        "usernamepassword"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "2 - Negative tests login",
+              "item": [
+                {
+                  "name": "Unregistered user can’t login with valid data - expected 401",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 401\", function () {\r",
+                          "    pm.response.to.have.status(401);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status code is 'Unauthorized'\", function () {\r",
+                          "    pm.response.to.have.status('Unauthorized');\r",
+                          "});\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"username\": \"{{$randomEmail}}\",\r\n  \"password\": \"Mmar123456$\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "https://contactapp-telran-backend.herokuapp.com/v1/user/login/usernamepassword",
+                      "protocol": "https",
+                      "host": [
+                        "contactapp-telran-backend",
+                        "herokuapp",
+                        "com"
+                      ],
+                      "path": [
+                        "v1",
+                        "user",
+                        "login",
+                        "usernamepassword"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Registered user can’t login with valid email and invalid pwd - without $ - expected 401",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 401\", function () {\r",
+                          "    pm.response.to.have.status(401);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status code is 'Unauthorized'\", function () {\r",
+                          "    pm.response.to.have.status('Unauthorized');\r",
+                          "});\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"username\": \"margo@gmail.com\",\r\n  \"password\": \"Mmar123456\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "https://contactapp-telran-backend.herokuapp.com/v1/user/login/usernamepassword",
+                      "protocol": "https",
+                      "host": [
+                        "contactapp-telran-backend",
+                        "herokuapp",
+                        "com"
+                      ],
+                      "path": [
+                        "v1",
+                        "user",
+                        "login",
+                        "usernamepassword"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Registered user can’t login with invalid email and valid pwd - without@ - expected 401",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 401\", function () {\r",
+                          "    pm.response.to.have.status(401);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status code is 'Unauthorized'\", function () {\r",
+                          "    pm.response.to.have.status('Unauthorized');\r",
+                          "});\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"username\": \"margogmail.com\",\r\n  \"password\": \"Mmar123456$\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "https://contactapp-telran-backend.herokuapp.com/v1/user/login/usernamepassword",
+                      "protocol": "https",
+                      "host": [
+                        "contactapp-telran-backend",
+                        "herokuapp",
+                        "com"
+                      ],
+                      "path": [
+                        "v1",
+                        "user",
+                        "login",
+                        "usernamepassword"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ],
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {},
+                    "exec": [
+                      ""
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {},
+                    "exec": [
+                      "pm.test(\"Root collection: From Folder Status code is 401\", function () {\r",
+                      "    pm.response.to.have.status(401);\r",
+                      "});"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Contact Controller",
+      "item": [
+        {
+          "name": "Add new contact",
+          "item": [
+            {
+              "name": "1 - Positive test New Contact",
+              "item": [
+                {
+                  "name": "Reg.user can create new contact-valid data in all fields-expected 200",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 200\", function () {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status message is OK\", function () {\r",
+                          "    pm.response.to.have.status('OK');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Contact was aded successfully\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.message).to.contains(\"Contact was added\");\r",
+                          "\r",
+                          "\r",
+                          "var arr = jsonData.message.split(': ');\r",
+                          "console.log(arr[1]);\r",
+                          "try{\r",
+                          "pm.environment.set(\"contact_id\", arr[1]);\r",
+                          "}catch{\r",
+                          "    console.log(e);\r",
+                          "}\r",
+                          "});\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"Anna\",\r\n  \"lastName\": \"Stark\",\r\n  \"email\": \"{{$randomEmail}}\",\r\n  \"phone\": \"778069960601\",\r\n  \"address\": \"Canada\",\r\n  \"description\": \"Best Friend\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reg.user can create new contact-valid data in required fields-expected 200",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Contact was aded successfully\", function () {\r\n    var jsonData = pm.response.json();\r\n    pm.expect(jsonData.message).to.contains(\"Contact was added\");\r\n\r\n\r\nvar arr = jsonData.message.split(': ');\r\nconsole.log(arr[1]);\r\ntry{\r\npm.environment.set(\"contact_id_2\", arr[1]);\r\n}catch{\r\n    console.log(e);\r\n}\r\n});\r\n\r\nconst requestBody = JSON.parse(pm.request.body.raw);\r\n\r\n\r\npm.environment.set(\"existing_phone\", requestBody.phone);\r\npm.environment.set(\"existing_email\", requestBody.email);\r\n\r\n"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "",
+                        "disabled": true
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"Anna1\",\r\n  \"lastName\": \"Stark1\",\r\n  \"email\": \"{{$randomEmail}}\",\r\n  \"phone\": \"{{$randomInt}}{{$randomInt}}{{$randomInt}}{{$randomInt}}\",\r\n  \"address\": \"NY\"  }",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reg.user-add new contact with only digits in Name - expected code 200",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 200\", function () {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status message is OK\", function () {\r",
+                          "    pm.response.to.have.status('OK');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Contact was aded successfully\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.message).to.contain('Contact was added!');\r",
+                          "});\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"123456789987654321\",\r\n  \"lastName\": \"Stark\",\r\n  \"email\": \"Anna.a@mail.com\",\r\n  \"phone\": \"778069960601\",\r\n  \"address\": \"Canada\",\r\n  \"description\": \"Best Friend\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reg.user-add new contact with only Russian letters in Address - expected code 200",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 200\", function () {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status message is OK\", function () {\r",
+                          "    pm.response.to.have.status('OK');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Contact was aded successfully\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.message).to.contain('Contact was added!');\r",
+                          "});\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"Annaa\",\r\n  \"lastName\": \"Stark\",\r\n  \"email\": \"Anna.a@mail.com\",\r\n  \"phone\": \"778069960601\",\r\n  \"address\": \"Канада\",\r\n  \"description\": \"Best Friend\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reg.user-add new contact with digits and special symbols in Address - expected code 200",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 200\", function () {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status message is OK\", function () {\r",
+                          "    pm.response.to.have.status('OK');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Contact was aded successfully\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.message).to.contain('Contact was added!');\r",
+                          "});\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"Annaa\",\r\n  \"lastName\": \"Stark\",\r\n  \"email\": \"Anna.a@mail.com\",\r\n  \"phone\": \"778069960601\",\r\n  \"address\": \"12345@@!\",\r\n  \"description\": \"Best Friend\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reg.user-add new contact with only special symbols in Name - expected code 200",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 200\", function () {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status message is OK\", function () {\r",
+                          "    pm.response.to.have.status('OK');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Contact was aded successfully\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.message).to.contain('Contact was added!');\r",
+                          "});\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"##^%%\",\r\n  \"lastName\": \"Stark\",\r\n  \"email\": \"Anna.a@mail.com\",\r\n  \"phone\": \"778069960601\",\r\n  \"address\": \"Canada\",\r\n  \"description\": \"Best Friend\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reg.user-add new contact with Hebrew symbols in Name - expected code 200",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 200\", function () {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status message is OK\", function () {\r",
+                          "    pm.response.to.have.status('OK');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Contact was aded successfully\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.message).to.contain('Contact was added!');\r",
+                          "});\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"אנה אניקיינקו\",\r\n  \"lastName\": \"Stark\",\r\n  \"email\": \"Anna.a@mail.com\",\r\n  \"phone\": \"778069960601\",\r\n  \"address\": \"Canada\",\r\n  \"description\": \"Best Friend\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reg.user-add new contact with Russian symbols in Name - expected code 200",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 200\", function () {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status message is OK\", function () {\r",
+                          "    pm.response.to.have.status('OK');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Contact was aded successfully\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.message).to.contain('Contact was added!');\r",
+                          "});\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"Всем привет!\",\r\n  \"lastName\": \"Stark\",\r\n  \"email\": \"Anna.a@mail.com\",\r\n  \"phone\": \"778069960601\",\r\n  \"address\": \"Canada\",\r\n  \"description\": \"Best Friend\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reg.user-add new contact with only digits in Last Name - expected code 200",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 200\", function () {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status code is Ok\", function () {\r",
+                          "    pm.response.to.have.status('OK');\r",
+                          "});\r",
+                          "pm.test(\"Contact was aded successfully\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.message).to.contain('Contact was added!');\r",
+                          "});\r",
+                          "\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"Irina\",\r\n  \"lastName\": \"00000000\",\r\n  \"email\": \"Anna.a@mail.com\",\r\n  \"phone\": \"778069960601\",\r\n  \"address\": \"Canada\",\r\n  \"description\": \"Best Friend\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reg.user-add new contact with special symbols in Last Name - expected code 200",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 200\", function () {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status code is Ok\", function () {\r",
+                          "    pm.response.to.have.status('OK');\r",
+                          "});\r",
+                          "pm.test(\"Contact was aded successfully\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.message).to.contain('Contact was added!');\r",
+                          "});\r",
+                          "\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"Irina\",\r\n  \"lastName\": \"__@__\",\r\n  \"email\": \"Anna.a@mail.com\",\r\n  \"phone\": \"778069960601\",\r\n  \"address\": \"Canada\",\r\n  \"description\": \"Best Friend\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reg.user-add new contact with Hebrew and Russian symbols in Last Name - expected code 200",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 200\", function () {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status code is Ok\", function () {\r",
+                          "    pm.response.to.have.status('OK');\r",
+                          "});\r",
+                          "pm.test(\"Contact was aded successfully\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.message).to.contain('Contact was added!');\r",
+                          "});\r",
+                          "\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"Irina\",\r\n  \"lastName\": \"אהיקיינקו-Аникеенко\",\r\n  \"email\": \"Anna.a@mail.com\",\r\n  \"phone\": \"778069960601\",\r\n  \"address\": \"Canada\",\r\n  \"description\": \"Best Friend\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reg.user-add new contact with random symbols in Last Name - expected code 200",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 200\", function () {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status code is Ok\", function () {\r",
+                          "    pm.response.to.have.status('OK');\r",
+                          "});\r",
+                          "pm.test(\"Contact was aded successfully\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.message).to.contain('Contact was added!');\r",
+                          "});\r",
+                          "\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"Irina\",\r\n  \"lastName\": \"{{$randomLastName}}\",\r\n  \"email\": \"Anna.a@mail.com\",\r\n  \"phone\": \"778069960601\",\r\n  \"address\": \"Canada\",\r\n  \"description\": \"Best Friend\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ],
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{token}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {},
+                    "exec": [
+                      ""
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {},
+                    "exec": [
+                      "pm.test(\"Root collection: Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Root collection: Status message is OK\", function () {\r",
+                      "    pm.response.to.have.status('OK');\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Root collection: Contact was aded successfully\", function () {\r",
+                      "    var jsonData = pm.response.json();\r",
+                      "    pm.expect(jsonData.message).to.contain('Contact was added!');\r",
+                      "});\r",
+                      "\r",
+                      ""
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "2 - Negative test New Contact",
+              "item": [
+                {
+                  "name": "[BUG] Reg.user-add new contact with existing Email - expected code 409",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 409\", function () {\r",
+                          "    pm.response.to.have.status(409);\r",
+                          "});\r",
+                          "console.log(pm.request.body.raw)\r",
+                          "\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"Anna\",\r\n  \"lastName\": \"Ivanov\",\r\n  \"email\": \"anna12345@gmail.com\",\r\n  \"phone\": \"778069960601\",\r\n  \"address\": \"Canada\",\r\n  \"description\": \"Best Friend\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "[BUG] Reg.user-add new contact with existing Phone number - expected code 409",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 409\", function () {\r",
+                          "    pm.response.to.have.status(409);\r",
+                          "});\r",
+                          "\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"Anna\",\r\n  \"lastName\": \"Stark\",\r\n  \"email\": \"Anna.a@mail.com\",\r\n  \"phone\": \"778069960601\",\r\n  \"address\": \"Canada\",\r\n  \"description\": \"Best Friend\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reg.user-add new contact with empty Name - expected code 400",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status code is: 'Bad Request'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.error).to.eql('Bad Request');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Name error: 'must not be blank'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.message.name).to.eql('must not be blank');\r",
+                          "});\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"\",\r\n  \"lastName\": \"Stark\",\r\n  \"email\": \"Anna.a@mail.com\",\r\n  \"phone\": \"778069960601\",\r\n  \"address\": \"Canada\",\r\n  \"description\": \"Best Friend\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reg.user-add new contact with empty Address - expected code 400",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status code is: 'Bad Request'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.error).to.eql('Bad Request');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Name error: 'must not be blank'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.message.address).to.eql('must not be blank');\r",
+                          "});\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"Anna\",\r\n  \"lastName\": \"Stark\",\r\n  \"email\": \"Anna.a@mail.com\",\r\n  \"phone\": \"778069960601\",\r\n  \"address\": \"\",\r\n  \"description\": \"Best Friend\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reg.user-add new contact with 3 backspaces in Address - expected code 400",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status code is: 'Bad Request'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.error).to.eql('Bad Request');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Name error: 'must not be blank'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.message.address).to.eql('must not be blank');\r",
+                          "});\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"Anna\",\r\n  \"lastName\": \"Stark\",\r\n  \"email\": \"Anna.a@mail.com\",\r\n  \"phone\": \"778069960601\",\r\n  \"address\": \"   \",\r\n  \"description\": \"Best Friend\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reg.user-add new contact with empty Phone Number - expected code 400",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status code is: 'Bad Request'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.error).to.eql('Bad Request');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Name error: 'Phone number must contain only digits! And length 10-15.'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.message.phone).to.contain('Phone number must contain only digits!');\r",
+                          "});\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"Anna\",\r\n  \"lastName\": \"Stark\",\r\n  \"email\": \"Anna.a@mail.com\",\r\n  \"phone\": \"\",\r\n  \"address\": \"Canada\",\r\n  \"description\": \"Best Friend\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "[BUG] Reg.user-add new contact with empty Email - expected code 400",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status code is: 'Bad Request'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.error).to.eql('Bad Request');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Name error: 'must not be blank.'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.message.email).to.contain('must not be blank');\r",
+                          "});\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"Anna\",\r\n  \"lastName\": \"Stark\",\r\n  \"email\": \"\",\r\n  \"phone\": \"8888888888\",\r\n  \"address\": \"Canada\",\r\n  \"description\": \"Best Friend\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reg.user-add new contact with 3 backspaces Email - expected code 400",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status code is: 'Bad Request'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.error).to.eql('Bad Request');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Name error: 'must be a well-formed email address'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.message.email).to.contain('must be a well-formed email address');\r",
+                          "});\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"Anna\",\r\n  \"lastName\": \"Stark\",\r\n  \"email\": \"   \",\r\n  \"phone\": \"8888888888\",\r\n  \"address\": \"Canada\",\r\n  \"description\": \"Best Friend\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reg.user-add new contact with double @ in Email - expected code 400",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status code is: 'Bad Request'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.error).to.eql('Bad Request');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Name error: 'must be a well-formed email address'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.message.email).to.contain('must be a well-formed email address');\r",
+                          "});\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"Anna\",\r\n  \"lastName\": \"Stark\",\r\n  \"email\": \"anna.anna@@gmail.com\",\r\n  \"phone\": \"8888888888\",\r\n  \"address\": \"Canada\",\r\n  \"description\": \"Best Friend\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "[BUG] Reg.user-add new contact with Russian letters in Email - expected code 400",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status code is: 'Bad Request'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.error).to.eql('Bad Request');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Name error: 'must be a well-formed email address'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.message.email).to.contain('must be a well-formed email address');\r",
+                          "});\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"Anna\",\r\n  \"lastName\": \"Stark\",\r\n  \"email\": \"Анна.аникеенко@gmail.com\",\r\n  \"phone\": \"8888888888\",\r\n  \"address\": \"Canada\",\r\n  \"description\": \"Best Friend\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "[BUG] Reg.user-add new contact with Hebrew letters in Email - expected code 400",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status code is: 'Bad Request'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.error).to.eql('Bad Request');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Name error: 'must be a well-formed email address'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.message.email).to.contain('must be a well-formed email address');\r",
+                          "});\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"Anna\",\r\n  \"lastName\": \"Stark\",\r\n  \"email\": \"אנה.אניקיינקו@gmail.com\",\r\n  \"phone\": \"8888888888\",\r\n  \"address\": \"Canada\",\r\n  \"description\": \"Best Friend\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reg.user-add new contact without characters before @ in Email - expected code 400",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status code is: 'Bad Request'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.error).to.eql('Bad Request');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Name error: 'must be a well-formed email address'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.message.email).to.contain('must be a well-formed email address');\r",
+                          "});\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"Anna\",\r\n  \"lastName\": \"Stark\",\r\n  \"email\": \"@gmail.com\",\r\n  \"phone\": \"8888888888\",\r\n  \"address\": \"Canada\",\r\n  \"description\": \"Best Friend\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reg.user-add new contact without characters after @ in Email - expected code 400",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status code is: 'Bad Request'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.error).to.eql('Bad Request');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Name error: 'must be a well-formed email address'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.message.email).to.contain('must be a well-formed email address');\r",
+                          "});\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"Anna\",\r\n  \"lastName\": \"Stark\",\r\n  \"email\": \"anna.anna@  \",\r\n  \"phone\": \"8888888888\",\r\n  \"address\": \"Canada\",\r\n  \"description\": \"Best Friend\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reg.user-add new contact with backspace before @ in Email - expected code 400",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status code is: 'Bad Request'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.error).to.eql('Bad Request');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Name error: 'must be a well-formed email address'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.message.email).to.contain('must be a well-formed email address');\r",
+                          "});\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"Anna\",\r\n  \"lastName\": \"Stark\",\r\n  \"email\": \"   @gmail.com\",\r\n  \"phone\": \"8888888888\",\r\n  \"address\": \"Canada\",\r\n  \"description\": \"Best Friend\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reg.user-add new contact with symbols in Phone Number - expected code 400",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status code is: 'Bad Request'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.error).to.eql('Bad Request');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Name error: 'Phone number must contain only digits! And length 10-15.'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.message.phone).to.contain('Phone number must contain only digits!');\r",
+                          "});\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"Anna\",\r\n  \"lastName\": \"Stark\",\r\n  \"email\": \"Anna.a@mail.com\",\r\n  \"phone\": \"anna54256\",\r\n  \"address\": \"Canada\",\r\n  \"description\": \"Best Friend\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reg.user-add new contact with 9 digits Phone Number - expected code 400",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status code is: 'Bad Request'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.error).to.eql('Bad Request');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Name error: 'Phone number must contain only digits! And length 10-15.'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.message.phone).to.contain('Phone number must contain only digits!');\r",
+                          "});\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"Anna\",\r\n  \"lastName\": \"Stark\",\r\n  \"email\": \"Anna.a@mail.com\",\r\n  \"phone\": \"999999999\",\r\n  \"address\": \"Canada\",\r\n  \"description\": \"Best Friend\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reg.user-add new contact with 19 digits Phone Number - expected code 400",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status code is: 'Bad Request'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.error).to.eql('Bad Request');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Name error: 'Phone number must contain only digits! And length 10-15.'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.message.phone).to.contain('Phone number must contain only digits!');\r",
+                          "});\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"Anna\",\r\n  \"lastName\": \"Stark\",\r\n  \"email\": \"Anna.a@mail.com\",\r\n  \"phone\": \"9999999999999999999\",\r\n  \"address\": \"Canada\",\r\n  \"description\": \"Best Friend\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reg.user-add new contact with special symbols in Phone Number - expected code 400",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status code is: 'Bad Request'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.error).to.eql('Bad Request');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Name error: 'Phone number must contain only digits! And length 10-15.'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.message.phone).to.contain('Phone number must contain only digits!');\r",
+                          "});\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"Anna\",\r\n  \"lastName\": \"Stark\",\r\n  \"email\": \"Anna.a@mail.com\",\r\n  \"phone\": \"999-999-999-999-999-999-9\",\r\n  \"address\": \"Canada\",\r\n  \"description\": \"Best Friend\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reg.user-add new contact with character in Phone Number - expected code 400",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status code is: 'Bad Request'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.error).to.eql('Bad Request');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Name error: 'Phone number must contain only digits! And length 10-15.'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.message.phone).to.contain('Phone number must contain only digits!');\r",
+                          "});\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"Anna\",\r\n  \"lastName\": \"Stark\",\r\n  \"email\": \"Anna.a@mail.com\",\r\n  \"phone\": \"anna05486899\",\r\n  \"address\": \"Canada\",\r\n  \"description\": \"Best Friend\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reg.user-add new contact with 3 backspaces in Name - expected code 400",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status code is: 'Bad Request'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.error).to.eql('Bad Request');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Name error: 'must not be blank'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.message.name).to.eql('must not be blank');\r",
+                          "});\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"   \",\r\n  \"lastName\": \"Stark\",\r\n  \"email\": \"{{$randomEmail}}\",\r\n  \"phone\": \"778069960601\",\r\n  \"address\": \"Canada\",\r\n  \"description\": \"Best Friend\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reg.user-add new contact with empty Last Name - expected code 400",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status code is: 'Bad Request'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.error).to.eql('Bad Request');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"LastName error: 'must not be blank'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.message.lastName).to.eql('must not be blank');\r",
+                          "});\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"Irina\",\r\n  \"lastName\": \"\",\r\n  \"email\": \"Anna.a@mail.com\",\r\n  \"phone\": \"778069960601\",\r\n  \"address\": \"Canada\",\r\n  \"description\": \"Best Friend\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reg.user-add new contact with 3 backspaces in Last Name - expected code 400",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status code is: 'Bad Request'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.error).to.eql('Bad Request');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"LastName error: 'must not be blank'\", function () {\r",
+                          "    var jsonData = pm.response.json();\r",
+                          "    pm.expect(jsonData.message.lastName).to.eql('must not be blank');\r",
+                          "});\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"Irina\",\r\n  \"lastName\": \"   \",\r\n  \"email\": \"Anna.a@mail.com\",\r\n  \"phone\": \"778069960601\",\r\n  \"address\": \"Canada\",\r\n  \"description\": \"Best Friend\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Unreg.user - add new contact unauthorized - expected code 401",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 401\", function () {\r",
+                          "    pm.response.to.have.status(401);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Status code name has status 'Unauthorized'\", function () {\r",
+                          "    pm.response.to.have.status(\"Unauthorized\");\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJST0xFX1VTRVIiXSwic3ViIjoibWFyZ29AZ21haWwuY29tIiwiaXNzIjoiUmVndWxhaXQiLCJleHAiOjE3ODAwNDE1NzMsImlhdCI6MTc3OTQ0MTU3M30.xfenGemyEoZjI6QU5JSpbC8ULUxQIyxKSUrqyTJY",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"Anna\",\r\n  \"lastName\": \"Stark\",\r\n  \"email\": \"Anna.a@mail.com\",\r\n  \"phone\": \"778069960601\",\r\n  \"address\": \"Canada\",\r\n  \"description\": \"Best Friend\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Update contact",
+          "item": [
+            {
+              "name": "1 - Positive test Update contact",
+              "item": [
+                {
+                  "name": "Reg.user can edit an existing contact - all fields- expected code 200",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Check message contains Contact was updated\", function () {\r\n    var jsonData = pm.response.json();\r\n    pm.expect(jsonData.message).to.eql(\"Contact was updated\");\r\n});\r\n\r\npm.test(\"You message is string\", function () {\r\n    var jsonData = pm.response.json();\r\n    pm.expect(jsonData.message).is.string;\r\n});"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "        {\r\n            \"id\": \"{{contact_id}}\",\r\n            \"name\": \"Merelyn\",\r\n            \"lastName\": \"Molly\",\r\n            \"email\": \"Allie79@hotmail.com\",\r\n            \"phone\": \"961611806762\",\r\n            \"address\": \"NY\",\r\n            \"description\": \"Friend\"\r\n        }",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reg.user can edit an existing contact - required fields- expected code 200",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Check message contains Contact was updated\", function () {\r\n    var jsonData = pm.response.json();\r\n    pm.expect(jsonData.message).to.eql(\"Contact was updated\");\r\n});\r\n\r\npm.test(\"You message is string\", function () {\r\n    var jsonData = pm.response.json();\r\n    pm.expect(jsonData.message).is.string;\r\n});"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "        {\r\n            \"id\": \"{{contact_id}}\",\r\n            \"name\": \"Merelyn\",\r\n            \"lastName\": \"Molly\",\r\n            \"email\": \"Allie79@hotmail.com\",\r\n            \"phone\": \"961611806762\",\r\n            \"address\": \"NY\",\r\n            \"description\": \"\"\r\n        }",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "2 - Negative test Update contact",
+              "item": [
+                {
+                  "name": "Reg.user can't edit an existing contact - incorrect [Name] - expected code 400",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r\n    pm.response.to.have.status(400);\r\n});\r\n\r\npm.test(\"Status is Bad Request\", function () {\r\n    pm.response.to.have.status(\"Bad Request\");\r\n});"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "        {\r\n            \"id\": \"{{contact_id}}\",\r\n            \"name\": \"\",\r\n            \"lastName\": \"Molly\",\r\n            \"email\": \"Allie79@hotmail.com\",\r\n            \"phone\": \"961611806762\",\r\n            \"address\": \"NY\",\r\n            \"description\": \"Friend\"\r\n        }",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reg.user can't edit an existing contact - incorrect [Last Name] - expected code 400",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r\n    pm.response.to.have.status(400);\r\n});\r\n\r\npm.test(\"Status is Bad Request\", function () {\r\n    pm.response.to.have.status(\"Bad Request\");\r\n});"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "        {\r\n            \"id\": \"{{contact_id}}\",\r\n            \"name\": \"Marina\",\r\n            \"lastName\": \"\",\r\n            \"email\": \"Allie79@hotmail.com\",\r\n            \"phone\": \"961611806762\",\r\n            \"address\": \"NY\",\r\n            \"description\": \"Friend\"\r\n        }",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reg.user can't edit an existing contact - incorrect [Phone] - expected code 400",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r\n    pm.response.to.have.status(400);\r\n});\r\n\r\npm.test(\"Status is Bad Request\", function () {\r\n    pm.response.to.have.status(\"Bad Request\");\r\n});"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "        {\r\n            \"id\": \"{{contact_id}}\",\r\n            \"name\": \"Marina\",\r\n            \"lastName\": \"Marino\",\r\n            \"email\": \"Allie79@hotmail.com\",\r\n            \"phone\": \"\",\r\n            \"address\": \"NY\",\r\n            \"description\": \"Friend\"\r\n        }",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "[BUG]Reg.user can't edit an existing contact - empty [Email] - expected code 400",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r\n    pm.response.to.have.status(400);\r\n});\r\n\r\npm.test(\"Status is Bad Request\", function () {\r\n    pm.response.to.have.status(\"Bad Request\");\r\n});"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "        {\r\n            \"id\": \"{{contact_id}}\",\r\n            \"name\": \"Marina\",\r\n            \"lastName\": \"Marino\",\r\n            \"email\": \"\",\r\n            \"phone\": \"99999999999\",\r\n            \"address\": \"NY\",\r\n            \"description\": \"Friend\"\r\n        }",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "[BUG]Reg.user can't edit an existing contact - Hebrew symbols [Email] - expected code 400",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r\n    pm.response.to.have.status(400);\r\n});\r\n\r\npm.test(\"Status is Bad Request\", function () {\r\n    pm.response.to.have.status(\"Bad Request\");\r\n});"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "        {\r\n            \"id\": \"{{contact_id}}\",\r\n            \"name\": \"Marina\",\r\n            \"lastName\": \"Marino\",\r\n            \"email\": \"אניקיינקו@גימייל.קום\",\r\n            \"phone\": \"99999999999\",\r\n            \"address\": \"NY\",\r\n            \"description\": \"Friend\"\r\n        }",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "[BUG]Reg.user can't edit an existing contact - Russian symbols [Email] - expected code 400",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r\n    pm.response.to.have.status(400);\r\n});\r\n\r\npm.test(\"Status is Bad Request\", function () {\r\n    pm.response.to.have.status(\"Bad Request\");\r\n});"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "        {\r\n            \"id\": \"{{contact_id}}\",\r\n            \"name\": \"Marina\",\r\n            \"lastName\": \"Marino\",\r\n            \"email\": \"аникеенко@мейл.ком\",\r\n            \"phone\": \"99999999999\",\r\n            \"address\": \"NY\",\r\n            \"description\": \"Friend\"\r\n        }",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reg.user can't edit an existing contact - incorrect [Address] - expected code 400",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r\n    pm.response.to.have.status(400);\r\n});\r\n\r\npm.test(\"Status is Bad Request\", function () {\r\n    pm.response.to.have.status(\"Bad Request\");\r\n});"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "        {\r\n            \"id\": \"{{contact_id}}\",\r\n            \"name\": \"Marina\",\r\n            \"lastName\": \"Marino\",\r\n            \"email\": \"anna.a@gmail.com\",\r\n            \"phone\": \"99999999999\",\r\n            \"address\": \"\",\r\n            \"description\": \"Friend\"\r\n        }",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "[BUG]Reg.user can't update contact with existing Phone - expected code 400",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r\n    pm.response.to.have.status(400);\r\n});\r\n\r\n"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "        {\r\n            \"id\": \"{{contact_id}}\",\r\n            \"name\": \"Merelyn\",\r\n            \"lastName\": \"Molly\",\r\n            \"email\": \"Allie79@hotmail.com\",\r\n            \"phone\": \"{{existing_phone}}\",\r\n            \"address\": \"NY\",\r\n            \"description\": \"Friend\"\r\n        }",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "[BUG]Reg.user can't update contact with existing Email - expected code 400",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r\n    pm.response.to.have.status(400);\r\n});\r\n\r\n"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "        {\r\n            \"id\": \"{{contact_id}}\",\r\n            \"name\": \"Merelyn\",\r\n            \"lastName\": \"Molly\",\r\n            \"email\": \"{{existing_email}}\",\r\n            \"phone\": \"99999999999\",\r\n            \"address\": \"NY\",\r\n            \"description\": \"Friend\"\r\n        }",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Unauthorized user can't update contact - not success - expected code 401",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status code is 401\", function () {\r\n    pm.response.to.have.status(401);\r\n});\r\n\r\npm.test(\"Status is Unauthorized\", function () {\r\n    pm.response.to.have.status(\"Unauthorized\");\r\n});\r\n\r\n"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "999999999",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "        {\r\n            \"id\": \"{{contact_id}}\",\r\n            \"name\": \"Merelyn\",\r\n            \"lastName\": \"Molly\",\r\n            \"email\": \"Allie79@hotmail.com\",\r\n            \"phone\": \"961611806762\",\r\n            \"address\": \"New York\",\r\n            \"description\": \"Best Friend\"\r\n        }",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "[BUG] Reg.user can't update not existing contact - not success - expected code 404",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                          "pm.test(\"Status code is 404\", function () {\r\n    pm.response.to.have.status(404);\r\n});\r\n\r\npm.test(\"Check message contains Contact not found in your contacts!\", function () {\r\n    var jsonData = pm.response.json();\r\n    pm.expect(jsonData.message).to.contains(\"not found in your contacts!\");\r\n});\r\n\r\npm.test(\"You message is string\", function () {\r\n    var jsonData = pm.response.json();\r\n    pm.expect(jsonData.message).is.string;\r\n});"
+                        ]
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "        {\r\n            \"id\": \"not-an-ID\",\r\n            \"name\": \"Marylyn\",\r\n            \"lastName\": \"Moully\",\r\n            \"email\": \"Allie79@hotmail.com\",\r\n            \"phone\": \"961611806762\",\r\n            \"address\": \"NY\",\r\n            \"description\": \"Friend\"\r\n        }",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url_without_PASS}}/v1/contacts",
+                      "host": [
+                        "{{url_without_PASS}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "contacts"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Delete contact by ID",
+          "item": [
+            {
+              "name": "Delete contact success - expected code 200",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Contact was deleted\", function () {\r\n    var jsonData = pm.response.json();\r\n    pm.expect(jsonData.message).to.eql(\"Contact was deleted!\");\r\n});"
+                    ]
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "(async () => {\r\n    try {\r\n      \r\n        const response = await pm.execution.runRequest(\"54635540-950cefb3-6197-4ec8-ae67-e2520b81e7af\");\r\n        console.log(\"Response status:\", response.code);\r\n        \r\n       \r\n        pm.environment.set(\"result\", response.json());\r\n        \r\n    } catch (error) {\r\n        console.error(\"Error:\", error);\r\n    }\r\n})();"
+                    ],
+                    "requests": {
+                      "54635540-950cefb3-6197-4ec8-ae67-e2520b81e7af": {
+                        "workspace": "da699d8d-04a8-47a7-8f18-6df90408a271",
+                        "collection": "54635540-5993aa09-21bf-43c3-b16b-f030a1c38134",
+                        "location": [
+                          "Phone_book_Anikeenko",
+                          "Contact Controller",
+                          "Add new contact",
+                          "1 - Positive test New Contact",
+                          "Reg.user can create new contact-valid data in required fields-expected 200"
+                        ]
+                      }
+                    }
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "",
+                    "disabled": true
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "javascript"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url_without_PASS}}/v1/contacts/{{contact_id_2}}",
+                  "host": [
+                    "{{url_without_PASS}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "contacts",
+                    "{{contact_id_2}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Get all contacts",
+          "item": [
+            {
+              "name": "Regist.user can get all contacts - expected code 200",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Status code is OK\", function () {\r",
+                      "    pm.response.to.have.status('OK');\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response time is less than 1200ms\", function () {\r",
+                      "    pm.expect(pm.response.responseTime).to.be.below(1200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url_without_PASS}}/v1/contacts",
+                  "host": [
+                    "{{url_without_PASS}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "contacts"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Unregist.user can't get all contacts - expected code 401",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 401\", function () {\r",
+                      "    pm.response.to.have.status(401);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Status code is 'Unauthorized'\", function () {\r",
+                      "    pm.response.to.have.status('Unauthorized');\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Error message: 'JWT signature does not match.'\", function () {\r",
+                      "    pm.expect(pm.response.text()).to.include(\"JWT signature does not match\");\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Your path is: '/v1/contacts'\", function () {\r",
+                      "    var jsonData = pm.response.json();\r",
+                      "    pm.expect(jsonData.path).to.eql(\"/v1/contacts\");\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJST0xFX1VTRVIiXSwic3ViIjoibWFyZ29AZ21haWwuY29tIiwiaXNzIjoiUmVndWxhaXQiLCJleHAiOjE3ODAwNjkwMjksImlhdCI6MTc3OTQ2OTAyOX0.-r_z_iFlE2tGN8OySrKPafDA2qHVx3UEymC",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url_without_PASS}}/v1/contacts",
+                  "host": [
+                    "{{url_without_PASS}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "contacts"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "json_web_token_0kic",
+      "secret": true
+    }
+  ]
+}
